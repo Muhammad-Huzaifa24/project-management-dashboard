@@ -45,6 +45,7 @@ const AppRoutes: React.FC = () => {
     return isAuthenticated && hasRole(allowedRole) ? (
       children
     ) : (
+      
       <Navigate to="/unauthorized" replace />
     );
   };
