@@ -38,7 +38,7 @@ export const postRequest = async <T, U>(
   token?: string | null
 ): Promise<AxiosResponse<T>> => {
   try {
-    console.log('url', url);
+    console.log('POST:', axiosInstance.defaults.baseURL + url);
     
     const response = await axiosInstance.post<T>(url, data, {
       ...options,
