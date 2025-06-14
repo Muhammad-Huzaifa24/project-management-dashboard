@@ -2,14 +2,14 @@ import React from "react";
 import { Card, CardContent, Button } from "@/Components/ui"
 import { Edit, LogOut } from "lucide-react";
 
-import { useUserActions } from "@/hooks/user"
-import {useStore} from "@/store"
+// import { useUserActions } from "@/hooks/user"
+// import {useStore} from "@/store"
 
 const ProfilePage: React.FC = () => {
-    const { user } = useStore();
-    const token = useStore?.getState()?.getToken();
-    const {useGetUser} = useUserActions(token)
-    const { data } = useGetUser(user?._id);
+    // const { user } = useStore();
+    // const token = useStore?.getState()?.getToken();
+    // const {useGetUser} = useUserActions(token)
+    // const { data } = useGetUser(user?._id);
 
     return (
         <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">

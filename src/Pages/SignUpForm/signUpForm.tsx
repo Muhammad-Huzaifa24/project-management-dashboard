@@ -6,7 +6,7 @@ import '@/style.css';
 
 // import { useRegister } from '@/hooks';
 import {useUserActions} from "@/hooks/user"
-import { RegisterData, RegisterError } from '@/types';
+import { RegisterData, RegisterError , SignUpResponse} from '@/types';
 import { validateForm } from '@/utils/helperFunction';
 import Loader from '@/Components/Loader';
 import {useStore} from "@/store"
@@ -82,7 +82,7 @@ const RegisterForm: React.FC = () => {
 
     if (Object.keys(newErrors).length === 0) {
       try {
-        const response = await register(formData);
+        const response = await register(formData) as { data: SignUpResponse };;
         console.log('response', response);
         
         if (response?.data?.success) {

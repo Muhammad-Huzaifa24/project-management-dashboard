@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Task } from '@/types';
+import { Task, User } from '@/types';
 // import { useTaskActions } from '@/hooks/useTaskActions';
 import {
   // Card,
@@ -26,9 +26,9 @@ import {
 import { MoreHorizontal } from 'lucide-react';
 import { useTaskActions } from "@/hooks/tasks"
 import { useStore } from "@/store"
-import {FaUser} from "react-icons/fa"
-import {statusBadgeClass} from "@/utils/helperFunction"
-import {useUserActions} from "@/hooks/user"
+import { FaUser } from "react-icons/fa"
+import { statusBadgeClass } from "@/utils/helperFunction"
+import { useUserActions } from "@/hooks/user"
 
 interface TaskCardProps {
   task: Task;
@@ -43,10 +43,10 @@ interface TaskSubmitData {
 }
 
 const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
-  
+
   const { user: CurrentUser } = useStore();
   const token = useStore?.getState()?.getToken();
-  const {useGetAllUsers, useGetUser} = useUserActions(token)   
+  const { useGetAllUsers, useGetUser } = useUserActions(token)
   const { deleteTask, updateTask } = useTaskActions(token);
   const [status, setStatus] = useState<
     'Assigned' | 'In Progress' | 'Completed'
@@ -58,8 +58,11 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
-  const {data: users, isPending: usersLoading, error: usersError } = useGetAllUsers();
-  const {data: user} = useGetUser(task?.assignedTo)
+  const { data : users, isPending: usersLoading } = useGetAllUsers();
+  const usersData = users as any;
+
+  const { data } = useGetUser(task?.assignedTo)
+  const user = data as any;
 
   const handleStatusChange = (newStatus: 'In Progress' | 'Completed') => {
     setStatus(newStatus);
@@ -82,7 +85,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
     deleteTask(task._id);
     setDeleteDialogOpen(false);
   };
- 
+
   return (
     <>
       <div className={` relative group border border-gray-200 rounded-lg hover:border-gray-400 ${CurrentUser?.role === 'Manager' ? 'cursor-pointer p-8' : 'pl-6 pr-3 py-4'}`}>
@@ -100,7 +103,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
                 <MoreHorizontal className="h-5 w-5 text-gray-600" />
               </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-[160px]">   
+            <DropdownMenuContent align="end" className="w-[160px]">
               <DropdownMenuItem
                 onSelect={(e) => {
                   e.preventDefault();
@@ -140,14 +143,14 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
         <p className="mt-2 text-gray-600 text-sm line-clamp-2">
           {task.description}
         </p>
-        
+
         {CurrentUser?.role === "Manager" && (
           <div className='flex items-center justify-end gap-2 mt-4'>
-          <FaUser className='text-fuchsia-500'/>
-          <p className=" text-gray-600 text-sm line-clamp-2">
-            {user?.data?.name}
-          </p>
-        </div>
+            <FaUser className='text-fuchsia-500' />
+            <p className=" text-gray-600 text-sm line-clamp-2">
+              {user?.data?.name}
+            </p>
+          </div>
         )}
       </div>
 
@@ -162,34 +165,34 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
           <form>
             <div className="grid gap-4 py-4">
               {/* Title */}
-              
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <label className="text-right" htmlFor="title">
-                    Title
-                  </label>
-                  <Input
-                    id="title"
-                    className="sm:col-span-3"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    disabled = {CurrentUser?.role !== "Manager"}
-                  />
-                </div>
+
+              <div className="grid grid-cols-4 items-center gap-4">
+                <label className="text-right" htmlFor="title">
+                  Title
+                </label>
+                <Input
+                  id="title"
+                  className="sm:col-span-3"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  disabled={CurrentUser?.role !== "Manager"}
+                />
+              </div>
 
               {/* Description */}
-            
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <label className="text-right" htmlFor="description">
-                    Description
-                  </label>
-                  <Input
-                    id="description"
-                    className="sm:col-span-3"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    disabled = {CurrentUser?.role !== "Manager"}
-                  />
-                </div>
+
+              <div className="grid grid-cols-4 items-center gap-4">
+                <label className="text-right" htmlFor="description">
+                  Description
+                </label>
+                <Input
+                  id="description"
+                  className="sm:col-span-3"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  disabled={CurrentUser?.role !== "Manager"}
+                />
+              </div>
 
               {/* Assigned User */}
               <div className="grid grid-cols-4 items-center gap-4">
@@ -208,7 +211,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
                     />
                   )}
                 </div>
-              
+
               </div>
               {/* Available Users */}
               {CurrentUser?.role === "Manager" && (
@@ -217,9 +220,9 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
                     Available Users
                   </label>
                   <div className="sm:col-span-3">
-                    {!users && usersLoading && <p>Loading users...</p>}
+                    {!usersData && usersLoading && <p>Loading users...</p>}
                     {/* {!users && usersError && <p>{usersError}</p>} */}
-                    {users?.data && (
+                    {usersData?.data && (
                       <Select
                         value={assignedTo}
                         onValueChange={(newUserId) => setAssignedTo(newUserId)}
@@ -227,12 +230,12 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
                         <SelectTrigger className="w-full">
                           <p>
                             {assignedTo
-                              ? users?.data?.find((u) => u._id === assignedTo)?.name
+                              ? usersData?.data?.find((u: User) => u._id === assignedTo)?.name
                               : 'Select a user'}
                           </p>
                         </SelectTrigger>
                         <SelectContent>
-                          {users?.data?.map((u) => (
+                          {usersData?.data?.map((u: User) => (
                             <SelectItem key={u._id} value={u._id}>
                               {u.name}
                             </SelectItem>
@@ -265,21 +268,21 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
                     <SelectItem value="QA">QA</SelectItem>
                   </SelectContent>
                 </Select>
-              
-            <DialogFooter className="mt-6 flex justify-end space-x-4">
-              <Button
-                type="reset"
-                variant={'outline'}
-                onClick={() => setDialogOpen(false)}
-                >
-                Cancel
-              </Button>
-              <Button onClick={handleUpdateClick}>Update</Button>
-            </DialogFooter>
+
+                <DialogFooter className="mt-6 flex justify-end space-x-4">
+                  <Button
+                    type="reset"
+                    variant={'outline'}
+                    onClick={() => setDialogOpen(false)}
+                  >
+                    Cancel
+                  </Button>
+                  <Button onClick={handleUpdateClick}>Update</Button>
+                </DialogFooter>
               </div>
             </div>
           </form>
-         
+
         </DialogContent>
       </Dialog>
 

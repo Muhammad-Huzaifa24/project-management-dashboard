@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 import {
   SidebarMenu,
@@ -29,11 +29,12 @@ const SideBarHeader = ({ updateStatusCount }: { updateStatusCount: () => void })
   const token = localStorage.getItem('accessToken');
   const {useGetProjects} = useProjectActions(token);
   const {data, isLoading, isError} = useGetProjects(token);
+  const projectsData = data as any;
   const { setTasks } = useTaskStore();
   const { setSelectedProject } = useProjectStore();
 
   useEffect(() => {
-    localStorage.setItem('statusCount', JSON.stringify(data?.data))
+    localStorage.setItem('statusCount', JSON.stringify(projectsData?.data))
     updateStatusCount(); // Notify parent to update status count
   }, [data, updateStatusCount ]);
 
@@ -56,7 +57,7 @@ const SideBarHeader = ({ updateStatusCount }: { updateStatusCount: () => void })
             {/* Project Count Badge */}
            
               <p className="bg-blue-700 text-white text-xs font-semibold px-2 py-0.5 rounded-full">
-                {(!isLoading && !isError && data?.data?.projects?.length > 0 ) ? data?.data?.projects?.length : 0}
+                {(!isLoading && !isError && projectsData?.data?.projects?.length > 0 ) ? projectsData?.data?.projects?.length : 0}
               </p>
             
             </SidebarMenuButton>
@@ -71,9 +72,9 @@ const SideBarHeader = ({ updateStatusCount }: { updateStatusCount: () => void })
 
             {isError && <div>Error loading projects</div>}
 
-            {!isLoading && !isError && data?.data?.projects?.length > 0 && (
+            {!isLoading && !isError && projectsData?.data?.projects?.length > 0 && (
               <div className="p-1">
-                {data?.data?.projects?.map((project) => (
+                {projectsData?.data?.projects?.map((project: Project) => (
                   <DropdownMenuItem
                     key={project._id}
                     onClick={() => handleProjectSelect(project)}
@@ -90,7 +91,7 @@ const SideBarHeader = ({ updateStatusCount }: { updateStatusCount: () => void })
               </div>
             )}
 
-            {!isLoading && !isError && data?.data?.length === 0 && (
+            {!isLoading && !isError && projectsData?.data?.length === 0 && (
               <div>No projects available.</div>
             )}
           </DropdownMenuContent>

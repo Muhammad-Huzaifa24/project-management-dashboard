@@ -1,4 +1,4 @@
-import { FaCheckCircle, FaExclamationCircle } from 'react-icons/fa';
+import {FaExclamationCircle } from 'react-icons/fa';
 
 export const notifications = [
   {

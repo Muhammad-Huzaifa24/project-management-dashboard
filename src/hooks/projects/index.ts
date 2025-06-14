@@ -1,23 +1,23 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { deleteRequest, putRequest, postRequest, getRequest } from '@/services/apiServices';
-import {ProjectFormData} from "@/types"
-import {toast} from 'react-hot-toast';
+import { ProjectFormData, ApiResponse } from "@/types"
+import { toast } from 'react-hot-toast';
 
 export const useProjectActions = (token?: string | null) => {
   const queryClient = useQueryClient();
 
   const useGetProjects = (token?: string | null) => {
     return useQuery({
-        queryKey: ['projects'],
-        queryFn: async () => {
-            const response = await getRequest(`/project`, undefined, token);
-            return response.data;
-        },
-        
+      queryKey: ['projects'],
+      queryFn: async () => {
+        const response = await getRequest(`/project`, undefined, token);
+        return response.data;
+      },
+
     });
   };
 
-  
+
   const useGetSpecificProject = (
     id: string | undefined,
     token?: string | null,
@@ -38,41 +38,46 @@ export const useProjectActions = (token?: string | null) => {
   const createProjectMutation = useMutation({
     mutationFn: async (projectData: ProjectFormData) => {
       const response = await postRequest(`/project`, projectData, undefined, token);
+      const data = response.data as ApiResponse;
       console.log('response', response);
-      if(response?.status === 200){
-        toast.success(response?.data?.message)
+      if (response?.status === 200) {
+        toast.success(data?.message)
       }
-      else toast.error(response?.data?.message)
-      return response.data;
+      else toast.error(data?.message)
+      return data;
     },
     onSuccess: () => {
-        queryClient.invalidateQueries({
-          queryKey: ['projects'],})
+      queryClient.invalidateQueries({
+        queryKey: ['projects'],
+      })
     }
   });
 
-  const updateProjectMutation = useMutation({  
+  const updateProjectMutation = useMutation({
     mutationFn: async ({ projectId, updatedData }: { projectId: string | undefined; updatedData: ProjectFormData }) => {
       console.log('updateProjectMutation----------------------------', projectId)
       const response = await putRequest(`/project/${projectId}`, updatedData, undefined, token);
-      toast.success(response?.data?.message)      
+      const data = response.data as ApiResponse;
+      toast.success(data?.message)
     },
     onSuccess: () => {
-        queryClient.invalidateQueries({
-          queryKey: ['projects'],})
+      queryClient.invalidateQueries({
+        queryKey: ['projects'],
+      })
     }
   });
 
   const deleteProjectMutation = useMutation<void, Error, string | undefined>({
     mutationFn: async (projectId: string | undefined) => {
-        if (!projectId) throw new Error("Project ID is required");
-        const response = await deleteRequest(`/project/${projectId}`, undefined, token);
-        toast.success(response?.data?.message)  
+      if (!projectId) throw new Error("Project ID is required");
+      const response = await deleteRequest(`/project/${projectId}`, undefined, token);
+      const data = response.data as ApiResponse;
+      toast.success(data?.message)
     },
     onSuccess: () => {
-        queryClient.invalidateQueries({
+      queryClient.invalidateQueries({
         queryKey: ['projects'],
-        });
+      });
     },
   });
 

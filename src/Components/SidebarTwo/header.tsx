@@ -29,7 +29,7 @@ const SideBarHeader = () => {
   const { setTasks } = useTaskStore();
   const { setSelectedProject } = useProjectStore();
   const {data, isLoading, isError} = useGetProjects(token)
-
+  const projectData = data as any;
 
   const handleProjectSelect = (project: Project) => {
     console.log('project', project)
@@ -50,7 +50,7 @@ const SideBarHeader = () => {
               </div>
               {/* Project Count Badge */}
                <p className="bg-blue-700 text-white text-xs font-semibold px-2 py-0.5 rounded-full">
-                {(!isLoading && !isError && data?.data?.length > 0 ) ? data?.data?.length : 0}
+                {(!isLoading && !isError && projectData?.data?.length > 0 ) ? projectData?.data?.length : 0}
               </p>
             </SidebarMenuButton>
           </DropdownMenuTrigger>
@@ -64,8 +64,8 @@ const SideBarHeader = () => {
               <div>Error loading projects</div>
             ) : (
               <div>
-                {data?.data?.length > 0 ? (
-                  data?.data?.map((project) => (
+                {projectData?.data?.length > 0 ? (
+                  projectData?.data?.map((project: Project) => (
                     <DropdownMenuItem
                       key={project?._id}
                       onClick={() => handleProjectSelect(project)}

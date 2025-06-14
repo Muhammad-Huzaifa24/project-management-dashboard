@@ -16,7 +16,8 @@ const PaymentForm = () => {
         { amount: 1000, currency: "usd" },
         undefined,
         token
-      );
+      ) as { data: { clientSecret: string } };
+
       console.log('response', response)
       setClientSecret(response?.data?.clientSecret);
     };

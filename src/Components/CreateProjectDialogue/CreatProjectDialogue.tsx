@@ -47,7 +47,9 @@ const ProjectDialog: React.FC<ProjectDialogProps> = ({
   const { mutate: createProject, isPending: creating } = createProjectMutation;
   const { mutate: updateProject, isPending: updating } = updateProjectMutation;
 
-  const { data: project, isLoading } = useGetSpecificProject(projectId, token, open);
+  const { data: projectData, isLoading } = useGetSpecificProject(projectId, token, open);
+  const project = projectData as any;
+
  
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');

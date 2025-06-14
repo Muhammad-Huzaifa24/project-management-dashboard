@@ -45,7 +45,6 @@ const useStore = create<UserStore>((set) => ({
   isUserAuthenticated : () => {
     const token =  localStorage.getItem('accessToken');
     if(token){
-      const expireTime = jwtDecode(token);
     }
   }
 }));

@@ -18,6 +18,7 @@ import ReactSelect from 'react-select'
 import {useStore} from "@/store"
 import * as Yup from 'yup';
 import {useUserActions} from "@/hooks/user"
+import { User } from '@/types';
 
 
 
@@ -48,10 +49,11 @@ const TaskCreateDialog: React.FC<TaskCreateDialogProps> = ({
 }) => {
   const token = useStore?.getState()?.getToken(); 
   const {useGetAllUsers} = useUserActions(token)
-  const { data: users } = useGetAllUsers();
+  const { data } = useGetAllUsers();
+  const users = data as any;
 
   // const { users = [] } = useUsers();
-   const userOptions = users?.data?.map((user) => ({
+   const userOptions = users?.data?.map((user: User) => ({
     value: user._id,
     label: user.name,
   }));
@@ -169,7 +171,7 @@ const TaskCreateDialog: React.FC<TaskCreateDialogProps> = ({
             <div>
               <ReactSelect
                 options={userOptions}
-                value={userOptions?.filter((user) => taskData.assignedTo.includes(user?.value))}
+                value={userOptions?.filter((user: User) => taskData.assignedTo.includes(user?.value))}
                 onChange={(selectedOption) => handleTaskChange('assignedTo', selectedOption ? selectedOption.value : '')}
                 placeholder="Select users"
               />

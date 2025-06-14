@@ -2,7 +2,6 @@ import React , {useState} from 'react';
 
 import {
   SidebarProvider,
-  Sidebar,
 } from './Components/ui/sidebar';
 
 import { AppSidebar } from './Components/Sidebar/AppSideBar';

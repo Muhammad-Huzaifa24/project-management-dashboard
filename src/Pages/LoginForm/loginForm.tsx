@@ -4,7 +4,7 @@ import { toast } from 'react-hot-toast';
 
 import '@/style.css';
 import { useUserActions } from '@/hooks/user';
-import { FormData, Errors } from '@/types';
+import { FormData, Errors, LoginResponse } from '@/types';
 import { useStore } from '@/store';
 import { validateForm } from '@/utils/helperFunction';
 import { LogIn, Lock, Mail } from '@/icons';
@@ -58,7 +58,7 @@ const LoginForm: React.FC = () => {
 
     if (Object.keys(newErrors).length === 0) {
       try {
-        const response = await login(formData);
+        const response = await login(formData) as { data: LoginResponse };
         console.log('login response', response)
         if (response?.data?.success) {
           toast.success(response?.data?.message);

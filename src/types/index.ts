@@ -106,3 +106,33 @@ export interface NotificationStore {
   addNotification: (notification: Notification) => void;
   clearNotifications: () => void;
 }
+
+export interface LoginResponse {
+  success: boolean;
+  message: string;
+  token?: string;
+  user?: {
+    id: string;
+    name: string;
+    email: string;
+  };
+}
+
+export interface SignUpResponse {
+  success: boolean;
+  message: string;
+  token?: string;
+  user?: {
+    id: string;
+    name: string;
+    email: string;
+  };
+}
+
+export interface ApiResponse<T = any> {
+  message: string;
+  success: boolean;
+  data?: T;
+}
+
+

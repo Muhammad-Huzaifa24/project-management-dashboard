@@ -4,7 +4,7 @@ import { Task } from '../../types';
 
 import { TaskCard } from '../TaskCard';
 
-import { ClipboardList, Loader2, PlusCircle } from "../../icons"
+import { Loader2, PlusCircle } from "../../icons"
 
 import { useTaskActions } from "@/hooks/tasks"
 
@@ -47,8 +47,10 @@ const TaskList: React.FC<{ filter: string }> = ({ filter }) => {
   const { useProjectTasks, createTask } = useTaskActions(token);
   const {useGetSpecificProject} = useProjectActions(token)
 
-  const {data: projectTasks, isLoading, isError, error} = useProjectTasks(projectId, token);
+  const {data, isLoading, isError, error} = useProjectTasks(projectId, token);
+  const projectTasks = data as any;
   const {data: project} = useGetSpecificProject(projectId, token)
+  const projectData = project as any;
 
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
 
@@ -113,7 +115,7 @@ const TaskList: React.FC<{ filter: string }> = ({ filter }) => {
         ) : <p></p>}
         <p className="flex items-center gap-2 text-xl font-semibold border-b pb-2  text-gray-700">
             <FaStar className='text-red-600'/>
-            Active Project: <p className="text-teal-600">{project?.data?.title}</p>
+            Active Project: <p className="text-teal-600">{projectData?.data?.title}</p>
         </p>
         {projectId && ( 
           <Select onValueChange={handleFilterChange} value={filter}>    
