@@ -38,6 +38,8 @@ export const postRequest = async <T, U>(
   token?: string | null
 ): Promise<AxiosResponse<T>> => {
   try {
+    console.log('url', url);
+    
     const response = await axiosInstance.post<T>(url, data, {
       ...options,
       headers: { ...defaultHeaders(token), ...options?.headers },
