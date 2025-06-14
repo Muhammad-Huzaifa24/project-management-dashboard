@@ -7,8 +7,6 @@ import {
   ScrollArea,
 } from '../ui';
 
-import { FloatingButton } from '../FloatingButton';
-
 import { ProjectDialog } from '../CreateProjectDialogue';
 
 import { 
@@ -19,13 +17,13 @@ import {
 
 
 export function AppSidebarTwo() {
-  const userRole = localStorage.getItem('userRole');
+  // const userRole = localStorage.getItem('userRole');
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  const handleButtonClick = () => {
-    setIsDialogOpen(true);
-  };
+  // const handleButtonClick = () => {
+  //   setIsDialogOpen(true);
+  // };
 
   return (
     <>

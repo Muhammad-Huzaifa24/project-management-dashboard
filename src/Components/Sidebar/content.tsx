@@ -33,6 +33,7 @@ import {useProjectActions} from "@/hooks/projects"
 
 import Loader from '../Loader';
 import { useNavigate } from 'react-router-dom';
+import { Project } from '@/types';
 
 
 
@@ -92,7 +93,7 @@ const ContentSection: React.FC<HelpSectionProps> = ({
   
   
   const filteredProjects = projects?.filter(
-    (project) => project.status === filter
+    (project: Project) => project.status === filter
   );
 
   const toggleCollapse = () => {
@@ -161,7 +162,7 @@ const ContentSection: React.FC<HelpSectionProps> = ({
             >
 
               <SidebarGroupContent className="">
-                {filteredProjects?.map((project) => (
+                {filteredProjects?.map((project: Project) => (
                   <SidebarMenuItem
                     key={project._id}
                     className="list-none my-1"

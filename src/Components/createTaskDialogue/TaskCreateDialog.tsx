@@ -15,9 +15,9 @@ import {
   Button,
 } from '@/Components/ui';
 import ReactSelect from 'react-select'
-import {useStore} from "@/store"
+import { useStore } from "@/store"
 import * as Yup from 'yup';
-import {useUserActions} from "@/hooks/user"
+import { useUserActions } from "@/hooks/user"
 import { User } from '@/types';
 
 
@@ -47,13 +47,13 @@ const TaskCreateDialog: React.FC<TaskCreateDialogProps> = ({
   onClose,
   onSubmit,
 }) => {
-  const token = useStore?.getState()?.getToken(); 
-  const {useGetAllUsers} = useUserActions(token)
+  const token = useStore?.getState()?.getToken();
+  const { useGetAllUsers } = useUserActions(token)
   const { data } = useGetAllUsers();
   const users = data as any;
 
   // const { users = [] } = useUsers();
-   const userOptions = users?.data?.map((user: User) => ({
+  const userOptions = users?.data?.map((user: User) => ({
     value: user._id,
     label: user.name,
   }));
@@ -70,11 +70,11 @@ const TaskCreateDialog: React.FC<TaskCreateDialogProps> = ({
   });
 
   const [errors, setErrors] = useState<{
-      title?: string;
-      description?: string;
-      status?: string;
-      assignedTo?: string;
-    }>({});
+    title?: string;
+    description?: string;
+    status?: string;
+    assignedTo?: string;
+  }>({});
 
   const handleTaskChange = (field: keyof typeof taskData, value: string | string[]) => {
     setErrors((prevErrors) => ({ ...prevErrors, [field]: undefined }));
@@ -88,43 +88,43 @@ const TaskCreateDialog: React.FC<TaskCreateDialogProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-      try {
-        await projectValidationSchema.validate(taskData, { abortEarly: false });
-        onSubmit(taskData);
-         setTaskData({
-          title: '',
-          description: '',
-          status: 'Pending',
-          assignedTo:'',
+    try {
+      await projectValidationSchema.validate(taskData, { abortEarly: false });
+      onSubmit(taskData);
+      setTaskData({
+        title: '',
+        description: '',
+        status: 'Pending',
+        assignedTo: '',
+      });
+      onClose();
+      // const createdProjectResponse = await addNewProject(taskData);
+      // const createdProject = createdProjectResponse?.data;
+      // if (createdProject) {
+      //   onSubmit(createdProject.data);
+      // }
+      // onSubmit(taskData);
+      // setTaskData({
+      //   title: '',
+      //   description: '',
+      //   status: 'Pending',
+      //   assignedTo: [] as string[],
+      // });
+    } catch (err) {
+      if (err instanceof Yup.ValidationError) {
+        const formErrors: Record<string, string> = {};
+        err.inner.forEach((error) => {
+          if (error.path) formErrors[error.path] = error.message;
         });
-        onClose();
-        // const createdProjectResponse = await addNewProject(taskData);
-        // const createdProject = createdProjectResponse?.data;
-        // if (createdProject) {
-        //   onSubmit(createdProject.data);
-        // }
-        // onSubmit(taskData);
-        // setTaskData({
-        //   title: '',
-        //   description: '',
-        //   status: 'Pending',
-        //   assignedTo: [] as string[],
-        // });
-      } catch (err) {
-        if (err instanceof Yup.ValidationError) {
-          const formErrors: Record<string, string> = {};
-          err.inner.forEach((error) => {
-            if (error.path) formErrors[error.path] = error.message;
-          });
-          setErrors(formErrors);
-        }
+        setErrors(formErrors);
       }
+    }
     // onClose(); 
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-     <DialogContent className="max-w-lg md:max-w-xl lg:max-w-2xl p-6 rounded-2xl shadow-lg bg-white">
+      <DialogContent className="max-w-lg md:max-w-xl lg:max-w-2xl p-6 rounded-2xl shadow-lg bg-white">
         <DialogHeader>
           <DialogTitle className="text-xl font-bold text-gray-800">Create a New Task</DialogTitle>
         </DialogHeader>
@@ -156,10 +156,10 @@ const TaskCreateDialog: React.FC<TaskCreateDialogProps> = ({
                 onValueChange={(value) => handleTaskChange('status', value)}
               >
                 <SelectTrigger className="col-span-3">
-                   <SelectValue />
+                  <SelectValue />
                 </SelectTrigger>
                 <SelectContent className="col-span-3">
-                  <SelectItem value="Pending">Pending</SelectItem> 
+                  <SelectItem value="Pending">Pending</SelectItem>
                   <SelectItem value="Assigned">Assigned</SelectItem>
                   <SelectItem value="In Progress">In Progress</SelectItem>
                   <SelectItem value="Completed">Completed</SelectItem>
@@ -171,7 +171,7 @@ const TaskCreateDialog: React.FC<TaskCreateDialogProps> = ({
             <div>
               <ReactSelect
                 options={userOptions}
-                value={userOptions?.filter((user: User) => taskData.assignedTo.includes(user?.value))}
+                value={userOptions?.filter((user: { value: string; label: string }) => taskData.assignedTo === user.value)}
                 onChange={(selectedOption) => handleTaskChange('assignedTo', selectedOption ? selectedOption.value : '')}
                 placeholder="Select users"
               />
@@ -180,7 +180,7 @@ const TaskCreateDialog: React.FC<TaskCreateDialogProps> = ({
             <Button type="submit" className="w-full">
               Create Task
             </Button>
-          </div>    
+          </div>
         </form>
       </DialogContent>
     </Dialog>
