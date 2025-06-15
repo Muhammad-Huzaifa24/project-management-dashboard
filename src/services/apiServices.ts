@@ -10,6 +10,7 @@ interface RequestOptions {
 const defaultHeaders = (token?: string | null) => ({
   Authorization: token ? `Bearer ${token}` : '',
   'Content-Type': 'application/json',
+  'X-Requested-With': 'XMLHttpRequest'
 });
 
 // GET request
@@ -22,7 +23,7 @@ export const getRequest = async <T>(
     const response = await axiosInstance.get<T>(url, {
       ...options,
       headers: { ...defaultHeaders(token), ...options?.headers },
-      withCredentials: options?.withCredentials ?? true, // Ensure credentials are sent with requests
+      withCredentials:  true, // Ensure credentials are sent with requests
     });
     return response; // Return the full response object
   } catch (error) {
@@ -43,7 +44,7 @@ export const postRequest = async <T, U>(
     const response = await axiosInstance.post<T>(url, data, {
       ...options,
       headers: { ...defaultHeaders(token), ...options?.headers },
-      withCredentials: options?.withCredentials ?? true, // Ensure credentials are sent with requests
+      withCredentials: true, // Ensure credentials are sent with requests
     });
     return response;
   } catch (error) {
@@ -67,7 +68,7 @@ export const putRequest = async <T, U>(
     const response = await axiosInstance.put<T>(url, data, {
       ...options,
       headers: { ...defaultHeaders(token), ...options?.headers },
-      withCredentials: options?.withCredentials ?? true, // Ensure credentials are sent with requests
+      withCredentials:  true, // Ensure credentials are sent with requests
     });
     return response; // Return the full response object
   } catch (error) {
@@ -86,7 +87,7 @@ export const deleteRequest = async <T>(
     const response = await axiosInstance.delete<T>(url, {
       ...options,
       headers: { ...defaultHeaders(token), ...options?.headers },
-      withCredentials: options?.withCredentials ?? true, // Ensure credentials are sent with requests
+      withCredentials: true, // Ensure credentials are sent with requests
     });
     return response; // Return the full response object
   } catch (error) {
